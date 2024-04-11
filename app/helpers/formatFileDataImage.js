@@ -2,7 +2,7 @@ import exceljs from "exceljs";
 
 const formatFileDataImage = async (filename, sheetName) => {
   const workbook = new exceljs.Workbook();
-  await workbook.xlsx.readFile(`assets/${filename}`);
+  await workbook.xlsx.load(filename.buffer);
   const worksheet = workbook.getWorksheet(sheetName);
   const data = [];
   worksheet.eachRow((row, rowNumber) => {

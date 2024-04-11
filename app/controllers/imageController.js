@@ -4,9 +4,8 @@ import { ImageModel, ProjectModel } from "../../server.js";
 const imageController = () => {
   return {
     async excelUpload(req, res) {
-      const filename = req.filename;
-      const { sheetName } = req.body;
-      console.log(req.filename, sheetName);
+      const filename = req.file;
+      const sheetName = req.body.sheetName;
       try {
         const data = await formatFileDataImage(filename, sheetName);
         data.map(async (item) => {
