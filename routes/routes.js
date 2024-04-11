@@ -1,6 +1,7 @@
 import emailController from "../app/controllers/emailController.js";
 import projectController from "../app/controllers/projectController.js";
 import imageController from "../app/controllers/imageController.js";
+import faqController from "../app/controllers/faqController.js";
 import upload from "../app/helpers/storage.js";
 
 const initRoutes = (app) => {
@@ -21,6 +22,11 @@ const initRoutes = (app) => {
     "/excel-upload-image",
     upload.single("file"),
     imageController().excelUpload
+  );
+  app.post(
+    "/excel-upload-faq",
+    upload.single("file"),
+    faqController().excelUpload
   );
 
   // Project Routes

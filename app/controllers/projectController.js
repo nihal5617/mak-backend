@@ -1,5 +1,5 @@
 import formatFileDataProject from "../helpers/formatFileDataProject.js";
-import { ImageModel, ProjectModel } from "../../server.js";
+import { FaqModel, ImageModel, ProjectModel } from "../../server.js";
 import { Op } from "sequelize";
 
 const projectController = () => {
@@ -62,6 +62,16 @@ const projectController = () => {
             ],
           },
         });
+        const thumbnailImages = await ImageModel.findAll({
+          where: { type: "Gallery" },
+        });
+        const thumbnailImagesMap = thumbnailImages.reduce((acc, curr) => {
+          acc[curr.projectId] = curr;
+          return acc;
+        }, {});
+        projects.map((project) => {
+          project.dataValues.thumbnail = thumbnailImagesMap[project.id];
+        });
         res.status(200).send({ status: "Success", data: projects });
       } catch (err) {
         console.log(err);
@@ -76,7 +86,7 @@ const projectController = () => {
           where: { id: Number(id) },
         });
         const imageAbout = await ImageModel.findAll({
-          where: { projectId: Number(id), type: "Property" },
+          where: { projectId: Number(id), type: "Gallery" },
         });
 
         const imageFloorPlan = await ImageModel.findAll({
@@ -90,12 +100,28 @@ const projectController = () => {
         const imageGallery = await ImageModel.findAll({
           where: { projectId: Number(id), type: "Gallery" },
         });
+
+        const builderLogo = await ImageModel.findOne({
+          where: { projectId: Number(id), type: "Logo" },
+        });
+
+        const qr = await ImageModel.findOne({
+          where: { projectId: Number(id), type: "QR" },
+        });
+
+        const faqs = await FaqModel.findAll({
+          where: { projectId: Number(id) },
+        });
+
         const data = {
           project,
+          faqs: faqs,
           about: imageAbout,
           floorPlan: imageFloorPlan,
           amenities: imageAmenities,
           gallery: imageGallery,
+          builderLogo: builderLogo.image_url,
+          qr: qr.image_url,
         };
         res.status(200).send({
           status: "Success",
