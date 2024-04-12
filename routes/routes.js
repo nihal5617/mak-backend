@@ -9,6 +9,11 @@ const initRoutes = (app) => {
   app.get("/", (req, res) => {
     res.send("Hello");
   });
+
+  app.get("/.well-known/pki-validation/", (req, res) => {
+    res.sendFile("C:/Users/Nihal gupta/Desktop/Mak Kotwal/backend/202501E747F340DF0381B93BA3F076EE.txt");
+  });
+
   // Email Route
   app.post("/send-email", emailController().getData);
 

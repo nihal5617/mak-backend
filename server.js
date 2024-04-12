@@ -2,15 +2,19 @@ import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
+import fs from "fs";
 import initRoutes from "./routes/routes.js";
 import { Sequelize } from "sequelize";
 import Project from "./app/models/project.js";
 import Image from "./app/models/image.js";
 import Faq from "./app/models/faq.js";
 
+const file = fs.readFileSync("./202501E747F340DF0381B93BA3F076EE.txt");
+
 /* CONFIGURATIONS */
 dotenv.config();
 
+/* APP */
 const app = express();
 app.use(cors());
 app.use(express.json());
