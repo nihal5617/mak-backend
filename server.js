@@ -3,13 +3,15 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
 import fs from "fs";
+import https from "https";
 import initRoutes from "./routes/routes.js";
 import { Sequelize } from "sequelize";
 import Project from "./app/models/project.js";
 import Image from "./app/models/image.js";
 import Faq from "./app/models/faq.js";
 
-const file = fs.readFileSync("./202501E747F340DF0381B93BA3F076EE.txt");
+const key = fs.readFileSync("private.key")
+const cert = fs.readFileSync("certificate.crt")
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -43,12 +45,22 @@ export const FaqModel = Faq(sequelize);
 /* PORT */
 const PORT = process.env.PORT || 3001;
 
+/* HTTPS */
+const options = {
+  key: key,
+  cert: cert
+}
+const server = https.createServer(options, app);
+
 /* SERVER */
 try {
   await sequelize.authenticate();
   console.log("Connection has been established successfully.");
   app.listen(PORT, () => {
     console.log(`Server is running`);
+  });
+  server.listen(8443, () => {
+    console.log(`Server is running on port 8443`);
   });
   ProjectModel.hasMany(ImageModel, { as: "images" });
   ProjectModel.hasMany(FaqModel, { as: "faqs" });
